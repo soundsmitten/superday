@@ -18,13 +18,12 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
     {
         guard let managedElement = self.getLastManagedElement() else { return nil }
         
-        let element = self.mapManagedObjectIntoElement(managedElement) 
+        let element = self.mapManagedObjectIntoElement(managedElement)
         return element
     }
     
     override func get(predicate: Predicate) -> [ T ]
     {
-        //Filter in order to get only the TimeSlots for said date
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: getEntityName())
         let nsPredicate = predicate.convertToNSPredicate()
         
@@ -32,7 +31,7 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         
         do
         {
-            let results = try getManagedObjectContext().fetch(fetchRequest) as! [NSManagedObject]
+            let results = try self.getManagedObjectContext().fetch(fetchRequest) as! [NSManagedObject]
             
             let elements = results.map(self.mapManagedObjectIntoElement)
             loggingService.log(withLogLevel: .info, message: "\(elements.count) TimeSlots found")
@@ -71,6 +70,7 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
     {
         let managedContext = getManagedObjectContext()
         let entity = NSEntityDescription.entity(forEntityName: self.getEntityName(), in: managedContext)
+        
         let request = NSFetchRequest<NSFetchRequestResult>()
         let predicate = predicate.convertToNSPredicate()
         
@@ -88,7 +88,8 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         }
         catch
         {
-            loggingService.log(withLogLevel: .warning, message: "No \(T.self) found when trying to update")
+            self.loggingService.log(withLogLevel: .warning, message: "No \(T.self) found when trying to update")
+            
             return false
         }
     }
@@ -135,7 +136,7 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
     
     private func getLastManagedElement() -> NSManagedObject?
     {
-        let managedContext = getManagedObjectContext()
+        let managedContext = self.getManagedObjectContext()
         
         let request = NSFetchRequest<NSFetchRequestResult>()
         request.entity = NSEntityDescription.entity(forEntityName: self.getEntityName(), in: managedContext)!
@@ -149,7 +150,7 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         }
         catch
         {
-            loggingService.log(withLogLevel: .error, message: "No TimeSlots found")
+            self.loggingService.log(withLogLevel: .error, message: "No TimeSlots found")
             return nil
         }
     }
