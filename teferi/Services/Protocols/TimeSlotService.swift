@@ -4,7 +4,6 @@ import CoreMotion
 ///Service that creates and updates TimeSlots
 protocol TimeSlotService
 {
-    
     /**
      Adds a callback that gets called everytime a new TimeSlot is created.
      
