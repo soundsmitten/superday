@@ -85,6 +85,9 @@
 		24D213AD1DB8CA9700E429CA /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D213AC1DB8CA9700E429CA /* AppState.swift */; };
 		24D213AF1DB8CB8300E429CA /* DefaultAppStateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D213AE1DB8CB8300E429CA /* DefaultAppStateService.swift */; };
 		24E7860C1DC399A90048F577 /* OnboardingPageViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7860B1DC399A90048F577 /* OnboardingPageViewControllerTests.swift */; };
+		24FE35471DE2F40D00AB2691 /* Predicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24FE35461DE2F40D00AB2691 /* Predicate.swift */; };
+		24FE35491DE2F75800AB2691 /* PredicateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24FE35481DE2F75800AB2691 /* PredicateExtensions.swift */; };
+		24FE354B1DE350D200AB2691 /* BaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24FE354A1DE350D200AB2691 /* BaseModel.swift */; };
 		513535D31DA26E3B00A365A9 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 513535D11DA26E3B00A365A9 /* Onboarding.storyboard */; };
 		513535D61DA2756C00A365A9 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513535D51DA2756C00A365A9 /* OnboardingPageViewController.swift */; };
 		51DDF7181DB4DBC200F9B672 /* OnboardingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51DDF7171DB4DBC200F9B672 /* OnboardingPage.swift */; };
@@ -201,6 +204,9 @@
 		24D213AC1DB8CA9700E429CA /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		24D213AE1DB8CB8300E429CA /* DefaultAppStateService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DefaultAppStateService.swift; path = Services/DefaultAppStateService.swift; sourceTree = "<group>"; };
 		24E7860B1DC399A90048F577 /* OnboardingPageViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingPageViewControllerTests.swift; path = ViewControllers/Onboarding/OnboardingPageViewControllerTests.swift; sourceTree = "<group>"; };
+		24FE35461DE2F40D00AB2691 /* Predicate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Predicate.swift; path = Models/Predicate.swift; sourceTree = "<group>"; };
+		24FE35481DE2F75800AB2691 /* PredicateExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PredicateExtensions.swift; path = Extensions/PredicateExtensions.swift; sourceTree = "<group>"; };
+		24FE354A1DE350D200AB2691 /* BaseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseModel.swift; path = Models/BaseModel.swift; sourceTree = "<group>"; };
 		326FBECEEBCDD54BD7B16CF8 /* Pods-teferi.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-teferi.debug.xcconfig"; path = "Pods/Target Support Files/Pods-teferi/Pods-teferi.debug.xcconfig"; sourceTree = "<group>"; };
 		43617E462FAF7C2B30BED3B4 /* Pods_teferiTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_teferiTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		513535D21DA26E3B00A365A9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Onboarding.storyboard; sourceTree = "<group>"; };
@@ -368,20 +374,68 @@
 			path = teferiTests;
 			sourceTree = "<group>";
 		};
+		24AF79251DCBC0FB004CF70A /* Implementations */ = {
+			isa = PBXGroup;
+			children = (
+				24AF79261DCBC10D004CF70A /* Interaction */,
+				24AF79271DCBC209004CF70A /* Monitoring */,
+				24AF79281DCBC227004CF70A /* Persisting */,
+				24AF79291DCBC26C004CF70A /* Tracking */,
+				24AF792A1DCBC278004CF70A /* State */,
+			);
+			name = Implementations;
+			sourceTree = "<group>";
+		};
+		24AF79261DCBC10D004CF70A /* Interaction */ = {
+			isa = PBXGroup;
+			children = (
+				246531711DA7B4A10066DFE0 /* DefaultNotificationService.swift */,
+			);
+			name = Interaction;
+			sourceTree = "<group>";
+		};
+		24AF79271DCBC209004CF70A /* Monitoring */ = {
+			isa = PBXGroup;
+			children = (
+				246531731DA7DDF10066DFE0 /* FabricMetricsServices.swift */,
+				2421F8C41D9BB4C600AF8857 /* SwiftyBeaverLoggingService.swift */,
+			);
+			name = Monitoring;
+			sourceTree = "<group>";
+		};
+		24AF79281DCBC227004CF70A /* Persisting */ = {
+			isa = PBXGroup;
+			children = (
+				247F05FB1D87337300451BAD /* CoreDataPersistencyService.swift */,
+				24B03B5C1D9E4DA300452D16 /* DefaultSettingsService.swift */,
+				24D155AF1DCBA76C004B8B90 /* DefaultTimeSlotService.swift */,
+			);
+			name = Persisting;
+			sourceTree = "<group>";
+		};
+		24AF79291DCBC26C004CF70A /* Tracking */ = {
+			isa = PBXGroup;
+			children = (
+				24564F591D83259100D9A8AE /* DefaultLocationService.swift */,
+				247F06051D88A78300451BAD /* DefaultTrackingService.swift */,
+			);
+			name = Tracking;
+			sourceTree = "<group>";
+		};
+		24AF792A1DCBC278004CF70A /* State */ = {
+			isa = PBXGroup;
+			children = (
+				24D213AE1DB8CB8300E429CA /* DefaultAppStateService.swift */,
+				2482CB021DB14DD400E892C1 /* DefaultEditStateService.swift */,
+			);
+			name = State;
+			sourceTree = "<group>";
+		};
 		24BA51A51D74D69C00042CDF /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				24AF79251DCBC0FB004CF70A /* Implementations */,
 				247F05F61D87319700451BAD /* Protocols */,
-				247F05FB1D87337300451BAD /* CoreDataPersistencyService.swift */,
-				24D213AE1DB8CB8300E429CA /* DefaultAppStateService.swift */,
-				2482CB021DB14DD400E892C1 /* DefaultEditStateService.swift */,
-				24564F591D83259100D9A8AE /* DefaultLocationService.swift */,
-				246531711DA7B4A10066DFE0 /* DefaultNotificationService.swift */,
-				24B03B5C1D9E4DA300452D16 /* DefaultSettingsService.swift */,
-				247F06051D88A78300451BAD /* DefaultTrackingService.swift */,
-				246531731DA7DDF10066DFE0 /* FabricMetricsServices.swift */,
-				2421F8C41D9BB4C600AF8857 /* SwiftyBeaverLoggingService.swift */,
-				24D155AF1DCBA76C004B8B90 /* DefaultTimeSlotService.swift */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -395,6 +449,8 @@
 				24564F5B1D8325CC00D9A8AE /* Category.swift */,
 				24564F5D1D8325CC00D9A8AE /* TimeSlot.swift */,
 				24C72AA51D906BDA00DABAC3 /* LogLevel.swift */,
+				24FE35461DE2F40D00AB2691 /* Predicate.swift */,
+				24FE354A1DE350D200AB2691 /* BaseModel.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -407,6 +463,7 @@
 				24564F621D83265900D9A8AE /* DateExtensions.swift */,
 				24564F631D83265900D9A8AE /* StringExtensions.swift */,
 				51EAA2871DC0BA910025680D /* UIViewExtensions.swift */,
+				24FE35481DE2F75800AB2691 /* PredicateExtensions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -974,9 +1031,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24FE354B1DE350D200AB2691 /* BaseModel.swift in Sources */,
 				24564F651D83265900D9A8AE /* DateExtensions.swift in Sources */,
 				2407A98C1D9D534B00066889 /* TimerExtensions.swift in Sources */,
 				246531741DA7DDF10066DFE0 /* FabricMetricsServices.swift in Sources */,
+				24FE35491DE2F75800AB2691 /* PredicateExtensions.swift in Sources */,
 				24564F561D83254E00D9A8AE /* TimelineCell.swift in Sources */,
 				24564F721D832A4F00D9A8AE /* PagerViewController.swift in Sources */,
 				24C72AA61D906BDA00DABAC3 /* LogLevel.swift in Sources */,
@@ -1002,6 +1061,7 @@
 				2420A86A1DB6271000C0478C /* EditTimeSlotView.swift in Sources */,
 				247F06061D88A78300451BAD /* DefaultTrackingService.swift in Sources */,
 				24B03B651DA3864500452D16 /* AddTimeSlotView.swift in Sources */,
+				24FE35471DE2F40D00AB2691 /* Predicate.swift in Sources */,
 				2421F8C31D9BACB500AF8857 /* ClosureGestureRecognizer.swift in Sources */,
 				24526A7D1D92D9BB00DA3FA0 /* Location.swift in Sources */,
 				24116A041D9DACCD00762BD6 /* AnimationHelpers.swift in Sources */,

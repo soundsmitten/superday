@@ -42,7 +42,7 @@ class DefaultTrackingService : TrackingService
         
         self.settingsService.setLastLocationDate(currentLocationTime)
         
-        let currentTimeSlot = self.timeSlotService.getLastTimeSlot()
+        let currentTimeSlot = self.timeSlotService.getLast()
         
         let difference = currentLocationTime.timeIntervalSince(previousLocationTime)
         if (difference / 60) < 25.0

@@ -42,5 +42,5 @@ protocol TimeSlotService
      
      - Returns: The last saved TimeSlot.
      */
-    func getLastTimeSlot() -> TimeSlot
+    func getLast() -> TimeSlot
 }

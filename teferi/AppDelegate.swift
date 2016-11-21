@@ -17,7 +17,6 @@ class AppDelegate : UIResponder, UIApplicationDelegate
     private let timeSlotService : TimeSlotService
     private let trackingService : TrackingService
     private let editStateService : EditStateService
-    private let persistencyService : PersistencyService
     private let notificationService : NotificationService
     
     //MARK: Properties
@@ -26,15 +25,19 @@ class AppDelegate : UIResponder, UIApplicationDelegate
     //Initializers
     override init()
     {
+        
         self.metricsService = FabricMetricsService()
         self.appStateService = DefaultAppStateService()
         self.settingsService = DefaultSettingsService()
-        self.timeSlotService = DefaultTimeSlotService()
         self.editStateService = DefaultEditStateService()
         self.loggingService = SwiftyBeaverLoggingService()
         self.locationService = DefaultLocationService(loggingService: self.loggingService)
-        self.persistencyService = CoreDataPersistencyService(loggingService: self.loggingService)
         self.notificationService = DefaultNotificationService(loggingService: self.loggingService)
+        
+        let persistencyService = CoreDataPersistencyService<TimeSlot>(loggingService: self.loggingService)
+        self.timeSlotService = DefaultTimeSlotService(loggingService: self.loggingService,
+                                                      persistencyService: persistencyService)
+        
         self.trackingService =
             DefaultTrackingService(loggingService: self.loggingService,
                                    settingsService: self.settingsService,

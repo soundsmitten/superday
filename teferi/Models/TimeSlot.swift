@@ -1,7 +1,8 @@
 import Foundation
+import CoreData
 
 /// Represents each individual activity performed by the app user.
-class TimeSlot
+class TimeSlot : BaseModel
 {
     // MARK: Properties
     var startTime = Date()
@@ -16,7 +17,7 @@ class TimeSlot
     }
     
     // MARK: Initializers
-    init() { }
+    required init() { }
     
     init(category: Category, startTime: Date, endTime: Date)
     {
@@ -46,5 +47,12 @@ class TimeSlot
     
         //The `endTime` property can never exceed midnight of the TimeSlot day, so this property considers it before returning the proper TimeInterval
         return timeEntryLastedOverOneDay ? timeEntryLimit : date
+    }
+    
+    override func setFromManagedObject(managedObject: NSManagedObject)
+    {
+        self.startTime = managedObject.value(forKey: "startTime") as! Date
+        self.endTime = managedObject.value(forKey: "endTime") as? Date
+        self.category = Category(rawValue: managedObject.value(forKey: "category") as! String)!
     }
 }
