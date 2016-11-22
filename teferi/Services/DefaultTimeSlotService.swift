@@ -35,7 +35,7 @@ class DefaultTimeSlotService : TimeSlotService
         let endTime = day.tomorrow.ignoreTimeComponents() as NSDate
         let predicate = Predicate(format: "(startTime >= %@) AND (startTime <= %@)", parameters: [ startTime, endTime ])
         
-        let timeSlots = self.persistencyService.get(predicate: predicate)
+        let timeSlots = self.persistencyService.get(withPredicate: predicate)
         return timeSlots
     }
     
@@ -47,7 +47,7 @@ class DefaultTimeSlotService : TimeSlotService
         let predicate = Predicate(format: "startTime == %@", parameters: [ timeSlot.startTime as AnyObject ])
         let editFunction = { (managedTimeSlot: AnyObject) in managedTimeSlot.setValue(category.rawValue, forKey: "category") }
         
-        if !self.persistencyService.update(predicate, updateFunction: editFunction)
+        if !self.persistencyService.update(withPredicate: predicate, updateFunction: editFunction)
         {
             self.loggingService.log(withLogLevel: .error, message: "Error updating category of TimeSlot created on \(timeSlot.startTime) from \(timeSlot.category) to \(category)")
         }
@@ -88,7 +88,7 @@ class DefaultTimeSlotService : TimeSlotService
         
         timeSlot.endTime = endDate
         
-        guard self.persistencyService.update(predicate, updateFunction: editFunction) else
+        guard self.persistencyService.update(withPredicate: predicate, updateFunction: editFunction) else
         {
             self.loggingService.log(withLogLevel: .error, message: "Failed to end TimeSlot started at \(timeSlot.startTime) with category \(timeSlot.category)")
             

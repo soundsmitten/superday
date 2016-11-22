@@ -17,7 +17,7 @@ protocol PersistencyService
      
      - Returns: The found entities that comply to the provided predicate.
      */
-    func get(predicate: Predicate) -> [ T ]
+    func get(withPredicate predicate: Predicate) -> [ T ]
     
     /**
      Persists the provided element.
@@ -37,7 +37,7 @@ protocol PersistencyService
      
      - Returns: A Bool indicating whether the operation suceeded or not.
      */
-    @discardableResult func update(_ predicate: Predicate, updateFunction: (AnyObject) -> ()) -> Bool
+    @discardableResult func update(withPredicate predicate: Predicate, updateFunction: (AnyObject) -> ()) -> Bool
 }
 
 class BasePersistencyService<T : BaseModel> : PersistencyService
@@ -56,7 +56,7 @@ class BasePersistencyService<T : BaseModel> : PersistencyService
      
      - Returns: The found entities that comply to the provided predicate.
      */
-    func get(predicate: Predicate) -> [ T ]
+    func get(withPredicate predicate: Predicate) -> [ T ]
     {
         fatalError("Not implemented")
     }
@@ -82,7 +82,7 @@ class BasePersistencyService<T : BaseModel> : PersistencyService
      
      - Returns: A Bool indicating whether the operation suceeded or not.
      */
-    @discardableResult func update(_ predicate: Predicate, updateFunction: (AnyObject) -> ()) -> Bool
+    @discardableResult func update(withPredicate predicate: Predicate, updateFunction: (AnyObject) -> ()) -> Bool
     {
         fatalError("Not implemented")
     }

@@ -22,7 +22,7 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         return element
     }
     
-    override func get(predicate: Predicate) -> [ T ]
+    override func get(withPredicate predicate: Predicate) -> [ T ]
     {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: getEntityName())
         let nsPredicate = predicate.convertToNSPredicate()
@@ -66,7 +66,7 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         }
     }
     
-    override func update(_ predicate: Predicate, updateFunction: (AnyObject) -> ()) -> Bool
+    override func update(withPredicate predicate: Predicate, updateFunction: (AnyObject) -> ()) -> Bool
     {
         let managedContext = getManagedObjectContext()
         let entity = NSEntityDescription.entity(forEntityName: self.getEntityName(), in: managedContext)
@@ -140,7 +140,7 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         
         let request = NSFetchRequest<NSFetchRequestResult>()
         request.entity = NSEntityDescription.entity(forEntityName: self.getEntityName(), in: managedContext)!
-        request.fetchLimit = 5
+        request.fetchLimit = 1
         request.sortDescriptors = [NSSortDescriptor(key: "startTime", ascending: false)]
         
         do
