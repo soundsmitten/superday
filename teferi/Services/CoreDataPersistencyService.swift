@@ -126,8 +126,8 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         
         do
         {
-            guard let managedTimeSlot = try managedContext.fetch(request).first else { return nil }
-            return managedTimeSlot as? NSManagedObject
+            guard let managedElement = try managedContext.fetch(request).first else { return nil }
+            return managedElement as? NSManagedObject
         }
         catch
         {
