@@ -34,7 +34,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate
         self.notificationService = DefaultNotificationService(loggingService: self.loggingService)
         
         let persistencyService = CoreDataPersistencyService<TimeSlot>(loggingService: self.loggingService,
-                                                                      modelConverter: TimeSlotModelConverter())
+                                                                      modelAdapter: TimeSlotModelAdapter())
         
         
         self.timeSlotService = DefaultTimeSlotService(loggingService: self.loggingService,

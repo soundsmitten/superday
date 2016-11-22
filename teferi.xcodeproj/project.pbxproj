@@ -28,7 +28,7 @@
 		2421F8C31D9BACB500AF8857 /* ClosureGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2421F8C21D9BACB500AF8857 /* ClosureGestureRecognizer.swift */; };
 		2421F8C51D9BB4C600AF8857 /* SwiftyBeaverLoggingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2421F8C41D9BB4C600AF8857 /* SwiftyBeaverLoggingService.swift */; };
 		2424AD851DE4486E00C8AADC /* TimelineViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2424AD841DE4486E00C8AADC /* TimelineViewControllerTests.swift */; };
-		2424AD871DE44D7700C8AADC /* CoreDataModelConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2424AD861DE44D7700C8AADC /* CoreDataModelConverter.swift */; };
+		2424AD871DE44D7700C8AADC /* CoreDataModelAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2424AD861DE44D7700C8AADC /* CoreDataModelAdapter.swift */; };
 		242AD5121DE36B6D001C3B72 /* DelayedSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242AD5111DE36B6D001C3B72 /* DelayedSequence.swift */; };
 		24526A751D92D98800DA3FA0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24526A741D92D98800DA3FA0 /* Constants.swift */; };
 		24526A771D92D99F00DA3FA0 /* MetricsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24526A761D92D99F00DA3FA0 /* MetricsService.swift */; };
@@ -148,7 +148,7 @@
 		2421F8C21D9BACB500AF8857 /* ClosureGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ClosureGestureRecognizer.swift; path = Helpers/ClosureGestureRecognizer.swift; sourceTree = "<group>"; };
 		2421F8C41D9BB4C600AF8857 /* SwiftyBeaverLoggingService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftyBeaverLoggingService.swift; path = Services/SwiftyBeaverLoggingService.swift; sourceTree = "<group>"; };
 		2424AD841DE4486E00C8AADC /* TimelineViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimelineViewControllerTests.swift; path = ViewControllers/TimelineViewControllerTests.swift; sourceTree = "<group>"; };
-		2424AD861DE44D7700C8AADC /* CoreDataModelConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CoreDataModelConverter.swift; path = Services/CoreDataModelConverter.swift; sourceTree = "<group>"; };
+		2424AD861DE44D7700C8AADC /* CoreDataModelAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CoreDataModelAdapter.swift; path = Services/CoreDataModelAdapter.swift; sourceTree = "<group>"; };
 		242AD5111DE36B6D001C3B72 /* DelayedSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DelayedSequence.swift; path = Helpers/DelayedSequence.swift; sourceTree = "<group>"; };
 		24526A741D92D98800DA3FA0 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		24526A761D92D99F00DA3FA0 /* MetricsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MetricsService.swift; path = Services/Protocols/MetricsService.swift; sourceTree = "<group>"; };
@@ -414,7 +414,7 @@
 			isa = PBXGroup;
 			children = (
 				247F05FB1D87337300451BAD /* CoreDataPersistencyService.swift */,
-				2424AD861DE44D7700C8AADC /* CoreDataModelConverter.swift */,
+				2424AD861DE44D7700C8AADC /* CoreDataModelAdapter.swift */,
 				24B03B5C1D9E4DA300452D16 /* DefaultSettingsService.swift */,
 				24D155AF1DCBA76C004B8B90 /* DefaultTimeSlotService.swift */,
 			);
@@ -1051,7 +1051,7 @@
 				24D213AD1DB8CA9700E429CA /* AppState.swift in Sources */,
 				2407A9881D9D512D00066889 /* LaunchAnimationView.swift in Sources */,
 				24564F4E1D83207900D9A8AE /* TimelineViewModel.swift in Sources */,
-				2424AD871DE44D7700C8AADC /* CoreDataModelConverter.swift in Sources */,
+				2424AD871DE44D7700C8AADC /* CoreDataModelAdapter.swift in Sources */,
 				2482CB011DB14DB700E892C1 /* EditStateService.swift in Sources */,
 				246531701DA7B4150066DFE0 /* NotificationService.swift in Sources */,
 				24B03B5D1D9E4DA300452D16 /* DefaultSettingsService.swift in Sources */,

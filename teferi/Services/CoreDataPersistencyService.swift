@@ -6,13 +6,13 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
 {
     //MARK: Fields
     let loggingService : LoggingService
-    let modelConverter : CoreDataModelConverter<T>
+    let modelAdapter : CoreDataModelAdapter<T>
     
     //MARK: Initializers
-    init(loggingService: LoggingService, modelConverter: CoreDataModelConverter<T>)
+    init(loggingService: LoggingService, modelAdapter: CoreDataModelAdapter<T>)
     {
+        self.modelAdapter = modelAdapter
         self.loggingService = loggingService
-        self.modelConverter = modelConverter
     }
     
     //MARK: PersistencyService implementation
@@ -26,7 +26,7 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
     
     override func get(withPredicate predicate: Predicate) -> [ T ]
     {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: getEntityName())
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: self.entityName)
         let nsPredicate = predicate.convertToNSPredicate()
         
         fetchRequest.predicate = nsPredicate
@@ -36,13 +36,13 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
             let results = try self.getManagedObjectContext().fetch(fetchRequest) as! [NSManagedObject]
             
             let elements = results.map(self.mapManagedObjectIntoElement)
-            loggingService.log(withLogLevel: .info, message: "\(elements.count) TimeSlots found")
+            self.loggingService.log(withLogLevel: .info, message: "\(elements.count) \(self.entityName)s found")
             return elements
         }
         catch
         {
             //Returns an empty array if anything goes wrong
-            loggingService.log(withLogLevel: .warning, message: "No TimeSlots found, return empty array")
+            self.loggingService.log(withLogLevel: .warning, message: "No \(self.entityName) found, returning empty array")
             return []
         }
     }
@@ -62,14 +62,15 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         }
         catch
         {
+            self.loggingService.log(withLogLevel: .error, message: "Error creating \(self.entityName)")
             return false
         }
     }
     
     override func update(withPredicate predicate: Predicate, updateFunction: (AnyObject) -> ()) -> Bool
     {
-        let managedContext = getManagedObjectContext()
-        let entity = NSEntityDescription.entity(forEntityName: self.getEntityName(), in: managedContext)
+        let managedContext = self.getManagedObjectContext()
+        let entity = NSEntityDescription.entity(forEntityName: self.entityName, in: managedContext)
         
         let request = NSFetchRequest<NSFetchRequestResult>()
         let predicate = predicate.convertToNSPredicate()
@@ -79,8 +80,8 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         
         do
         {
-            guard let managedTimeSlot = try managedContext.fetch(request).first as AnyObject? else { return false }
-            updateFunction(managedTimeSlot)
+            guard let managedElement = try managedContext.fetch(request).first as AnyObject? else { return false }
+            updateFunction(managedElement)
             
             try managedContext.save()
             
@@ -89,7 +90,6 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         catch
         {
             self.loggingService.log(withLogLevel: .warning, message: "No \(T.self) found when trying to update")
-            
             return false
         }
     }
@@ -103,15 +103,15 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
     
     private func setManagedElementProperties(_ element: T, _ managedContext: NSManagedObjectContext)
     {
-        let entity =  NSEntityDescription.entity(forEntityName: self.getEntityName(), in: managedContext)!
+        let entity = NSEntityDescription.entity(forEntityName: self.entityName, in: managedContext)!
         let managedObject = NSManagedObject(entity: entity, insertInto: managedContext)
         
-        modelConverter.setManagedElementProperties(fromModel: element, managedObject: managedObject)
+        self.modelAdapter.setManagedElementProperties(fromModel: element, managedObject: managedObject)
     }
     
     private func mapManagedObjectIntoElement(_ managedObject: NSManagedObject) -> T
     {
-        let result = modelConverter.getModel(fromManagedObject: managedObject)
+        let result = self.modelAdapter.getModel(fromManagedObject: managedObject)
         return result
     }
     
@@ -120,9 +120,9 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         let managedContext = self.getManagedObjectContext()
         
         let request = NSFetchRequest<NSFetchRequestResult>()
-        request.entity = NSEntityDescription.entity(forEntityName: self.getEntityName(), in: managedContext)!
+        request.entity = NSEntityDescription.entity(forEntityName: self.entityName, in: managedContext)!
         request.fetchLimit = 1
-        request.sortDescriptors = [NSSortDescriptor(key: "startTime", ascending: false)]
+        request.sortDescriptors = self.modelAdapter.sortDescriptors
         
         do
         {
@@ -131,12 +131,12 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         }
         catch
         {
-            self.loggingService.log(withLogLevel: .error, message: "No TimeSlots found")
+            self.loggingService.log(withLogLevel: .error, message: "No \(self.entityName)s found")
             return nil
         }
     }
     
-    private func getEntityName() -> String
+    private lazy var entityName : String =
     {
         let fullName = String(describing: T.self)
         let range = fullName.range(of: ".", options: .backwards)
@@ -148,5 +148,5 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         {
             return fullName
         }
-    }
+    }()
 }

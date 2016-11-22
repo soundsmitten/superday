@@ -1,7 +1,7 @@
 import Foundation
 import CoreData
 
-class CoreDataModelConverter<T : BaseModel>
+class CoreDataModelAdapter<T : BaseModel>
 {
     func getModel(fromManagedObject managedObject: NSManagedObject) -> T
     {
@@ -12,10 +12,17 @@ class CoreDataModelConverter<T : BaseModel>
     {
         fatalError("Not implemented")
     }
+    
+    var sortDescriptors : [NSSortDescriptor]!
 }
 
-class TimeSlotModelConverter : CoreDataModelConverter<TimeSlot>
+class TimeSlotModelAdapter : CoreDataModelAdapter<TimeSlot>
 {
+    override init()
+    {
+        super.sortDescriptors = [ NSSortDescriptor(key: "startTime", ascending: false) ]
+    }
+    
     override func getModel(fromManagedObject managedObject: NSManagedObject) -> TimeSlot
     {
         let timeSlot = TimeSlot()
