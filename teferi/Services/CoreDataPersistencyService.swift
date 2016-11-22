@@ -6,11 +6,13 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
 {
     //MARK: Fields
     let loggingService : LoggingService
+    let modelConverter : CoreDataModelConverter<T>
     
     //MARK: Initializers
-    init(loggingService: LoggingService)
+    init(loggingService: LoggingService, modelConverter: CoreDataModelConverter<T>)
     {
         self.loggingService = loggingService
+        self.modelConverter = modelConverter
     }
     
     //MARK: PersistencyService implementation
@@ -49,11 +51,9 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
     {
         //Gets the managed object from CoreData's context
         let managedContext = self.getManagedObjectContext()
-        let entity =  NSEntityDescription.entity(forEntityName: getEntityName(), in: managedContext)!
-        let managedElement = NSManagedObject(entity: entity, insertInto: managedContext)
         
         //Sets the properties
-        self.setManagedProperties(managedElement, element)
+        self.setManagedElementProperties(element, managedContext)
         
         do
         {
@@ -101,36 +101,17 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         return appDelegate.managedObjectContext
     }
     
-    private func setManagedProperties(_ managedElement: NSManagedObject, _ element: T)
+    private func setManagedElementProperties(_ element: T, _ managedContext: NSManagedObjectContext)
     {
-        let mirror = Mirror(reflecting: element)
-        for child in mirror.children
-        {
-            guard let key = child.label else { continue }
-            
-            var value: Any?
-            let mirrored = Mirror(reflecting: child.value)
-            
-            if mirrored.displayStyle != .optional
-            {
-                value = child.value
-            }
-            else if let firstChild = mirrored.children.first
-            {
-                value = firstChild.value
-            }
-            
-            guard let actualValue = value else { continue }
-            
-            managedElement.setValue(mirrored.displayStyle == .enum ? String(describing: actualValue) : actualValue, forKey: key)
-        }
+        let entity =  NSEntityDescription.entity(forEntityName: self.getEntityName(), in: managedContext)!
+        let managedObject = NSManagedObject(entity: entity, insertInto: managedContext)
+        
+        modelConverter.setManagedElementProperties(fromModel: element, managedObject: managedObject)
     }
     
     private func mapManagedObjectIntoElement(_ managedObject: NSManagedObject) -> T
     {
-        let result = T()
-        result.setFromManagedObject(managedObject: managedObject)
-        
+        let result = modelConverter.getModel(fromManagedObject: managedObject)
         return result
     }
     

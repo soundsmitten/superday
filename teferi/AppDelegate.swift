@@ -25,7 +25,6 @@ class AppDelegate : UIResponder, UIApplicationDelegate
     //Initializers
     override init()
     {
-        
         self.metricsService = FabricMetricsService()
         self.appStateService = DefaultAppStateService()
         self.settingsService = DefaultSettingsService()
@@ -34,7 +33,10 @@ class AppDelegate : UIResponder, UIApplicationDelegate
         self.locationService = DefaultLocationService(loggingService: self.loggingService)
         self.notificationService = DefaultNotificationService(loggingService: self.loggingService)
         
-        let persistencyService = CoreDataPersistencyService<TimeSlot>(loggingService: self.loggingService)
+        let persistencyService = CoreDataPersistencyService<TimeSlot>(loggingService: self.loggingService,
+                                                                      modelConverter: TimeSlotModelConverter())
+        
+        
         self.timeSlotService = DefaultTimeSlotService(loggingService: self.loggingService,
                                                       persistencyService: persistencyService)
         

@@ -7,9 +7,4 @@ class BaseModel : NSObject
     {
         
     }
-    
-    func setFromManagedObject(managedObject: NSManagedObject)
-    {
-        fatalError("Not implemented")
-    }
 }

@@ -48,11 +48,4 @@ class TimeSlot : BaseModel
         //The `endTime` property can never exceed midnight of the TimeSlot day, so this property considers it before returning the proper TimeInterval
         return timeEntryLastedOverOneDay ? timeEntryLimit : date
     }
-    
-    override func setFromManagedObject(managedObject: NSManagedObject)
-    {
-        self.startTime = managedObject.value(forKey: "startTime") as! Date
-        self.endTime = managedObject.value(forKey: "endTime") as? Date
-        self.category = Category(rawValue: managedObject.value(forKey: "category") as! String)!
-    }
 }
