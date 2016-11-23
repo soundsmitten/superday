@@ -78,7 +78,7 @@ class MainViewController : UIViewController
         let fadeFrame = CGRect(x: 0.0, y: view.frame.height - 100, width: view.frame.width, height: 100)
         let bottomFadeStartColor = UIColor.white.withAlphaComponent(1.0)
         let bottomFadeEndColor = UIColor.white.withAlphaComponent(0.0)
-        let bottomFadeOverlay = fadeOverlay(frame: fadeFrame, startColor: bottomFadeStartColor, endColor: bottomFadeEndColor)
+        let bottomFadeOverlay = self.fadeOverlay(frame: fadeFrame, startColor: bottomFadeStartColor, endColor: bottomFadeEndColor)
         view.layer.addSublayer(bottomFadeOverlay)
         
         //Edit View
