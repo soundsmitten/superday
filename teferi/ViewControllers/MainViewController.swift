@@ -262,8 +262,8 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
         controller.dismiss(animated: true, completion: nil)
         if error != nil
         {
-            let alertTitle = "Can't send email."
-            let alertMessage = "There was an error sending the email."
+            let alertTitle = "Sorry. Can’t send email."
+            let alertMessage = "You’re offline. Please connect to the internet and try again."
             let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: .default)
             alert.addAction(okAction)
@@ -278,7 +278,7 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
         //Check if email is configured on device
         guard MFMailComposeViewController.canSendMail() else
         {
-            let alert = UIAlertController(title: "Can't send email.", message: "Mail is not configured on his device. Either set it up in \"Settings -> Mail, Contacts, Calendars\" or email support@toggl.com using your preferred email client", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Oops! Seems like your email account is not set up.", message: "Go to “Settings > Mail > Add Account” to set up an email account or send us your feedback to support@toggl.com", preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: .default)
             alert.addAction(okAction)
             self.present(alert, animated: true, completion: nil)
@@ -288,7 +288,7 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
         let composeVC = MFMailComposeViewController()
         composeVC.mailComposeDelegate = self
         composeVC.setToRecipients(["support@toggl.com"])
-        composeVC.setSubject("Superday Support")
+        composeVC.setSubject("Superday feedback")
         composeVC.setMessageBody("", isHTML: false)
         
         //Try to attach SwiftyBeaver Log
