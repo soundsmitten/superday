@@ -45,7 +45,7 @@ class TimelineCell : UITableViewCell
      
      - Parameter timeSlot: TimeSlot that will be bound.
      */
-    func bind(toTimeSlot timeSlot: TimeSlot, index: Int)
+    func bind(toTimeSlot timeSlot: TimeSlot, index: Int, lastInPastDay: Bool = false)
     {
         self.currentIndex = index
         
@@ -58,7 +58,7 @@ class TimelineCell : UITableViewCell
         //Updates each one of the cell's components
         self.layoutLine(withColor: categoryColor, hours: hours, minutes: minutes, isRunning: isRunning)
         self.layoutElapsedTimeLabel(withColor: categoryColor, hours: hours, minutes: minutes)
-        self.layoutDescriptionLabel(withStartTime: timeSlot.startTime, category: timeSlot.category)
+        self.layoutDescriptionLabel(withTimeSlot: timeSlot, category: timeSlot.category, lastInPastDay: lastInPastDay)
         self.layoutCategoryIcon(withImageName: timeSlot.category.icon, color: categoryColor)
     }
     
@@ -71,15 +71,16 @@ class TimelineCell : UITableViewCell
     }
     
     /// Updates the label that displays the description and starting time of the slot
-    private func layoutDescriptionLabel(withStartTime startTime: Date, category: Category)
+    private func layoutDescriptionLabel(withTimeSlot timeSlot: TimeSlot, category: Category, lastInPastDay: Bool = false)
     {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
-        let dateString = formatter.string(from: startTime)
+        let dateString = formatter.string(from: timeSlot.startTime)
+        let endString = lastInPastDay ? " - " + formatter.string(from: timeSlot.endTime!) : ""
         let categoryText = category == .unknown ? "" : category.rawValue.capitalized
         
-        let description = "\(categoryText) \(dateString)"
-        let nonBoldRange = NSMakeRange(categoryText.characters.count, dateString.characters.count + 1)
+        let description = "\(categoryText) \(dateString)" + endString
+        let nonBoldRange = NSMakeRange(categoryText.characters.count, dateString.characters.count + endString.characters.count + 1)
         let attributedText = description.getBoldStringWithNonBoldText(nonBoldRange)
         
         slotDescription?.attributedText = attributedText
