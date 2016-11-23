@@ -7,7 +7,7 @@ import QuartzCore
 import CoreLocation
 import SnapKit
 
-class MainViewController : UIViewController
+class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
 {
     // MARK: Fields
     private var isFirstUse = false
@@ -41,6 +41,7 @@ class MainViewController : UIViewController
     @IBOutlet private weak var icon : UIImageView!
     @IBOutlet private weak var titleLabel : UILabel!
     @IBOutlet private weak var calendarButton : UIButton!
+    @IBOutlet private weak var contactButton: UIButton!
     
     func inject(_ metricsService: MetricsService,
                 _ appStateService: AppStateService,
@@ -152,7 +153,7 @@ class MainViewController : UIViewController
     }
     
     // MARK: Actions
-    @IBAction func onCalendarTouchUpInside()
+    @IBAction func onCalendarTouchUpInside(_ sender: UIButton)
     {
         let today = Date().ignoreTimeComponents()
         
@@ -168,6 +169,11 @@ class MainViewController : UIViewController
             completion: nil)
         
         self.onDateChanged(date: today)
+    }
+    
+    @IBAction func onContactTouchUpInside()
+    {
+        composeEmail()
     }
     
     // MARK: Methods
@@ -248,5 +254,54 @@ class MainViewController : UIViewController
         
         //Grey out views
         self.editView.isEditing = isEditing
+    }
+    
+    // MARK: MFMailComposeViewControllerDelegate
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?)
+    {
+        controller.dismiss(animated: true, completion: nil)
+        if error != nil
+        {
+            let alertTitle = "Can't send email."
+            let alertMessage = "There was an error sending the email."
+            let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default)
+            alert.addAction(okAction)
+            self.present(alert, animated: true)
+        }
+        dismiss(animated: true)
+    }
+    
+    //Setup compose email form
+    func composeEmail()
+    {
+        //Check if email is configured on device
+        guard MFMailComposeViewController.canSendMail() else
+        {
+            let alert = UIAlertController(title: "Can't send email.", message: "Mail is not configured on his device. Either set it up in \"Settings -> Mail, Contacts, Calendars\" or email support@toggl.com using your preferred email client", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default)
+            alert.addAction(okAction)
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
+        
+        let composeVC = MFMailComposeViewController()
+        composeVC.mailComposeDelegate = self
+        composeVC.setToRecipients(["support@toggl.com"])
+        composeVC.setSubject("Superday Support")
+        composeVC.setMessageBody("", isHTML: false)
+        
+        //Try to attach SwiftyBeaver Log
+        let fileManager = FileManager.default
+        if let cacheDir = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first
+        {
+            let logFile = cacheDir.appendingPathComponent("swiftybeaver.log")
+            if let data = try? Data(contentsOf: logFile)
+            {
+                composeVC.addAttachmentData(data, mimeType: "text/xml", fileName: "superday.log")
+            }
+        }
+        
+        self.present(composeVC, animated: true)
     }
 }
