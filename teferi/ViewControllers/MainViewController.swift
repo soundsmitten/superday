@@ -153,7 +153,7 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
     }
     
     // MARK: Actions
-    @IBAction func onCalendarTouchUpInside(_ sender: UIButton)
+    @IBAction func onCalendarTouchUpInside()
     {
         let today = Date().ignoreTimeComponents()
         
