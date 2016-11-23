@@ -45,7 +45,7 @@ class TimelineCell : UITableViewCell
      
      - Parameter timeSlot: TimeSlot that will be bound.
      */
-    func bind(toTimeSlot timeSlot: TimeSlot, index: Int, lastInPastDay: Bool = false)
+    func bind(toTimeSlot timeSlot: TimeSlot, index: Int, lastInPastDay: Bool)
     {
         self.currentIndex = index
         
@@ -71,7 +71,7 @@ class TimelineCell : UITableViewCell
     }
     
     /// Updates the label that displays the description and starting time of the slot
-    private func layoutDescriptionLabel(withTimeSlot timeSlot: TimeSlot, category: Category, lastInPastDay: Bool = false)
+    private func layoutDescriptionLabel(withTimeSlot timeSlot: TimeSlot, category: Category, lastInPastDay: Bool)
     {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
