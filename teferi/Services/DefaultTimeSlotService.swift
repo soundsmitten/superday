@@ -45,7 +45,11 @@ class DefaultTimeSlotService : TimeSlotService
         guard timeSlot.category != category else { return }
         
         let predicate = Predicate(format: "startTime == %@", parameters: [ timeSlot.startTime as AnyObject ])
-        let editFunction = { (managedTimeSlot: AnyObject) in managedTimeSlot.setValue(category.rawValue, forKey: "category") }
+        let editFunction = { (timeSlot: TimeSlot) -> (TimeSlot) in
+        
+            timeSlot.category = category
+            return timeSlot
+        }
         
         if !self.persistencyService.update(withPredicate: predicate, updateFunction: editFunction)
         {
@@ -84,7 +88,11 @@ class DefaultTimeSlotService : TimeSlotService
         }
         
         let predicate = Predicate(format: "startTime == %@", parameters: [ timeSlot.startTime as AnyObject ])
-        let editFunction = { (managedTimeSlot: AnyObject) in managedTimeSlot.setValue(endDate, forKey: "endTime") }
+        let editFunction = { (timeSlot: TimeSlot) -> TimeSlot in
+            
+            timeSlot.endTime = endDate
+            return timeSlot
+        }
         
         timeSlot.endTime = endDate
         

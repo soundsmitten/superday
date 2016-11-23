@@ -37,7 +37,7 @@ protocol PersistencyService
      
      - Returns: A Bool indicating whether the operation suceeded or not.
      */
-    @discardableResult func update(withPredicate predicate: Predicate, updateFunction: (AnyObject) -> ()) -> Bool
+    @discardableResult func update(withPredicate predicate: Predicate, updateFunction: (T) -> T) -> Bool
 }
 
 class BasePersistencyService<T : BaseModel> : PersistencyService
@@ -82,7 +82,7 @@ class BasePersistencyService<T : BaseModel> : PersistencyService
      
      - Returns: A Bool indicating whether the operation suceeded or not.
      */
-    @discardableResult func update(withPredicate predicate: Predicate, updateFunction: (AnyObject) -> ()) -> Bool
+    @discardableResult func update(withPredicate predicate: Predicate, updateFunction: (T) -> T) -> Bool
     {
         fatalError("Not implemented")
     }

@@ -51,9 +51,11 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
     {
         //Gets the managed object from CoreData's context
         let managedContext = self.getManagedObjectContext()
+        let entity = NSEntityDescription.entity(forEntityName: self.entityName, in: managedContext)!
+        let managedObject = NSManagedObject(entity: entity, insertInto: managedContext)
         
         //Sets the properties
-        self.setManagedElementProperties(element, managedContext)
+        self.setManagedElementProperties(element, managedObject)
         
         do
         {
@@ -67,7 +69,7 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         }
     }
     
-    override func update(withPredicate predicate: Predicate, updateFunction: (AnyObject) -> ()) -> Bool
+    override func update(withPredicate predicate: Predicate, updateFunction: (T) -> T) -> Bool
     {
         let managedContext = self.getManagedObjectContext()
         let entity = NSEntityDescription.entity(forEntityName: self.entityName, in: managedContext)
@@ -81,7 +83,12 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         do
         {
             guard let managedElement = try managedContext.fetch(request).first as AnyObject? else { return false }
-            updateFunction(managedElement)
+            let managedObject = managedElement as! NSManagedObject
+            
+            let entity = self.modelAdapter.getModel(fromManagedObject: managedObject)
+            let newEntity = updateFunction(entity)
+            
+            self.setManagedElementProperties(newEntity, managedObject)
             
             try managedContext.save()
             
@@ -101,11 +108,8 @@ class CoreDataPersistencyService<T : BaseModel> : BasePersistencyService<T>
         return appDelegate.managedObjectContext
     }
     
-    private func setManagedElementProperties(_ element: T, _ managedContext: NSManagedObjectContext)
+    private func setManagedElementProperties(_ element: T, _ managedObject: NSManagedObject)
     {
-        let entity = NSEntityDescription.entity(forEntityName: self.entityName, in: managedContext)!
-        let managedObject = NSManagedObject(entity: entity, insertInto: managedContext)
-        
         self.modelAdapter.setManagedElementProperties(fromModel: element, managedObject: managedObject)
     }
     
