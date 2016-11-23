@@ -18,9 +18,9 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
     private lazy var viewModel : MainViewModel =
     {
         return MainViewModel(metricsService: self.metricsService,
+                             timeSlotService: self.timeSlotService,
                              settingsService: self.settingsService,
-                             editStateService: self.editStateService,
-                             persistencyService: self.persistencyService)
+                             editStateService: self.editStateService)
     }()
     
     private var pagerViewController : PagerViewController { return self.childViewControllers.last as! PagerViewController }
@@ -30,8 +30,8 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
     private var appStateService : AppStateService!
     private var locationService : LocationService!
     private var settingsService : SettingsService!
+    private var timeSlotService : TimeSlotService!
     private var editStateService : EditStateService!
-    private var persistencyService : PersistencyService!
     
     private var editView : EditTimeSlotView!
     private var addButton : AddTimeSlotView!
@@ -47,15 +47,15 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
                 _ appStateService: AppStateService,
                 _ locationService: LocationService,
                 _ settingsService: SettingsService,
-                _ editStateService: EditStateService,
-                _ persistencyService: PersistencyService) -> MainViewController
+                _ timeSlotService: TimeSlotService,
+                _ editStateService: EditStateService) -> MainViewController
     {
         self.metricsService = metricsService
         self.appStateService = appStateService
         self.locationService = locationService
         self.settingsService = settingsService
+        self.timeSlotService = timeSlotService
         self.editStateService = editStateService
-        self.persistencyService = persistencyService
         
         return self
     }
@@ -69,8 +69,8 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
         self.pagerViewController.inject(self.metricsService,
                                         self.appStateService,
                                         self.settingsService,
-                                        self.editStateService,
-                                        self.persistencyService)
+                                        self.timeSlotService,
+                                        self.editStateService)
         
         //Add button
         self.addButton = (Bundle.main.loadNibNamed("AddTimeSlotView", owner: self, options: nil)?.first) as? AddTimeSlotView
@@ -83,7 +83,7 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
         {
             //Sets the first TimeSlot's category to leisure
             let timeSlot = TimeSlot(category: .leisure)
-            self.persistencyService.addNewTimeSlot(timeSlot)
+            self.timeSlotService.add(timeSlot: timeSlot)
         }
         else
         {
@@ -162,8 +162,8 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
         self.pagerViewController.setViewControllers(
             [ TimelineViewController(date: today,
                                      metricsService: self.metricsService,
-                                     editStateService: self.editStateService,
-                                     persistencyService: self.persistencyService) ],
+                                     timeSlotService: self.timeSlotService,
+                                     editStateService: self.editStateService) ],
             direction: .forward,
             animated: true,
             completion: nil)
