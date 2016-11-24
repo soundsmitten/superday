@@ -2,12 +2,16 @@ import UIKit
 
 class LayerView: UIView
 {
-    private let caLayer: CALayer
+    private var caLayer: CALayer
     
-    init(layer: CALayer)
+    init(layer caLayer: CALayer)
     {
-        self.caLayer = layer
+        self.caLayer = caLayer
+        
+        //Set to arbitrary "starter" frame (Use autolayout to change in usage.)
         super.init(frame: UIScreen.main.bounds)
+            
+        self.layer.addSublayer(self.caLayer)
     }
     
     required init?(coder aDecoder: NSCoder) {
