@@ -1,6 +1,6 @@
 import UIKit
 
-class LayerView: UIView
+class AutoResizingLayerView: UIView
 {
     private var caLayer: CALayer
     

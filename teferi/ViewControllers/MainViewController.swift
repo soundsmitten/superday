@@ -76,7 +76,7 @@ class MainViewController : UIViewController
         let bottomFadeStartColor = UIColor.white.withAlphaComponent(1.0)
         let bottomFadeEndColor = UIColor.white.withAlphaComponent(0.0)
         let bottomFadeOverlay = self.fadeOverlay(startColor: bottomFadeStartColor, endColor: bottomFadeEndColor)
-        let fadeView = LayerView(layer: bottomFadeOverlay)
+        let fadeView = AutoResizingLayerView(layer: bottomFadeOverlay)
         self.view.addSubview(fadeView)
         fadeView.snp.makeConstraints { make in
             make.bottom.equalTo(self.view.snp.bottom)
