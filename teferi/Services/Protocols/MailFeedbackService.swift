@@ -1,16 +1,8 @@
-//
-//  DefaultiOSEmailService.swift
-//  teferi
-//
-//  Created by Nicholas Lash on 11/24/16.
-//  Copyright © 2016 Toggl. All rights reserved.
-//
-
 import Foundation
 import UIKit
 import MessageUI
 
-class DefaultiOSEmailService: NSObject, EmailService, MFMailComposeViewControllerDelegate
+class MailFeedbackService: NSObject, FeedbackService, MFMailComposeViewControllerDelegate
 {
     override init()
     {

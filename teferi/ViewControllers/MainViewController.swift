@@ -21,7 +21,7 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
                              timeSlotService: self.timeSlotService,
                              settingsService: self.settingsService,
                              editStateService: self.editStateService,
-                             emailService: self.emailService)
+                             feedbackService: self.feedbackService)
     }()
     
     private var pagerViewController : PagerViewController { return self.childViewControllers.last as! PagerViewController }
@@ -33,7 +33,7 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
     private var settingsService : SettingsService!
     private var timeSlotService : TimeSlotService!
     private var editStateService : EditStateService!
-    private var emailService: EmailService!
+    private var feedbackService: FeedbackService!
     
     private var editView : EditTimeSlotView!
     private var addButton : AddTimeSlotView!
@@ -51,7 +51,7 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
                 _ settingsService: SettingsService,
                 _ timeSlotService: TimeSlotService,
                 _ editStateService: EditStateService,
-                _ emailService: EmailService) -> MainViewController
+                _ feedbackService: FeedbackService) -> MainViewController
     {
         self.metricsService = metricsService
         self.appStateService = appStateService
@@ -59,7 +59,7 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
         self.settingsService = settingsService
         self.timeSlotService = timeSlotService
         self.editStateService = editStateService
-        self.emailService = emailService
+        self.feedbackService = feedbackService
         
         return self
     }
@@ -192,7 +192,7 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
         {
             logURL = cacheDir.appendingPathComponent("swiftybeaver.log")
         }
-        emailService.composeEmail(recipients: ["support@toggl.com"], subject: "Superday feedback", body: "", logURL: logURL, parentViewController: self)
+        feedbackService.composeEmail(recipients: ["support@toggl.com"], subject: "Superday feedback", body: "", logURL: logURL, parentViewController: self)
         
     }
     
