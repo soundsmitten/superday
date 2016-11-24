@@ -20,7 +20,8 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
         return MainViewModel(metricsService: self.metricsService,
                              timeSlotService: self.timeSlotService,
                              settingsService: self.settingsService,
-                             editStateService: self.editStateService)
+                             editStateService: self.editStateService,
+                             emailService: self.emailService)
     }()
     
     private var pagerViewController : PagerViewController { return self.childViewControllers.last as! PagerViewController }
@@ -32,6 +33,7 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
     private var settingsService : SettingsService!
     private var timeSlotService : TimeSlotService!
     private var editStateService : EditStateService!
+    private var emailService: EmailService!
     
     private var editView : EditTimeSlotView!
     private var addButton : AddTimeSlotView!
@@ -48,7 +50,8 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
                 _ locationService: LocationService,
                 _ settingsService: SettingsService,
                 _ timeSlotService: TimeSlotService,
-                _ editStateService: EditStateService) -> MainViewController
+                _ editStateService: EditStateService,
+                _ emailService: EmailService) -> MainViewController
     {
         self.metricsService = metricsService
         self.appStateService = appStateService
@@ -56,6 +59,7 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
         self.settingsService = settingsService
         self.timeSlotService = timeSlotService
         self.editStateService = editStateService
+        self.emailService = emailService
         
         return self
     }
@@ -180,7 +184,16 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
     
     @IBAction func onContactTouchUpInside()
     {
-        composeEmail()
+        let fileManager = FileManager.default
+        var logURL: URL?
+        
+        // try to get a the log file url
+        if let cacheDir = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first
+        {
+            logURL = cacheDir.appendingPathComponent("swiftybeaver.log")
+        }
+        emailService.composeEmail(recipients: ["support@toggl.com"], subject: "Superday feedback", body: "", logURL: logURL, parentViewController: self)
+        
     }
     
     // MARK: Methods
@@ -261,55 +274,6 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
         
         //Grey out views
         self.editView.isEditing = isEditing
-    }
-    
-    // MARK: MFMailComposeViewControllerDelegate
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?)
-    {
-        controller.dismiss(animated: true, completion: nil)
-        if error != nil
-        {
-            let alertTitle = "Sorry. Can’t send email."
-            let alertMessage = "You’re offline. Please connect to the internet and try again."
-            let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: .default)
-            alert.addAction(okAction)
-            self.present(alert, animated: true)
-        }
-        dismiss(animated: true)
-    }
-    
-    //Setup compose email form
-    func composeEmail()
-    {
-        //Check if email is configured on device
-        guard MFMailComposeViewController.canSendMail() else
-        {
-            let alert = UIAlertController(title: "Oops! Seems like your email account is not set up.", message: "Go to “Settings > Mail > Add Account” to set up an email account or send us your feedback to support@toggl.com", preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: .default)
-            alert.addAction(okAction)
-            self.present(alert, animated: true, completion: nil)
-            return
-        }
-        
-        let composeVC = MFMailComposeViewController()
-        composeVC.mailComposeDelegate = self
-        composeVC.setToRecipients(["support@toggl.com"])
-        composeVC.setSubject("Superday feedback")
-        composeVC.setMessageBody("", isHTML: false)
-        
-        //Try to attach SwiftyBeaver Log
-        let fileManager = FileManager.default
-        if let cacheDir = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first
-        {
-            let logFile = cacheDir.appendingPathComponent("swiftybeaver.log")
-            if let data = try? Data(contentsOf: logFile)
-            {
-                composeVC.addAttachmentData(data, mimeType: "text/xml", fileName: "superday.log")
-            }
-        }
-        
-        self.present(composeVC, animated: true)
     }
     
     //Configure overlay
