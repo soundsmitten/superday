@@ -3,7 +3,12 @@ import UIKit
 
 class MockFeedbackService: FeedbackService
 {
-    func composeEmail(recipients: [String], subject: String, body: String, logURL: URL?, parentViewController viewController: UIViewController)
+    var logURL: URL?
+    {
+        return nil
+    }
+    
+    func composeFeedback(parentViewController: UIViewController)
     {
         
     }

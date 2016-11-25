@@ -35,7 +35,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate
         self.editStateService = DefaultEditStateService()
         self.loggingService = SwiftyBeaverLoggingService()
         self.locationService = DefaultLocationService(loggingService: self.loggingService)
-        self.feedbackService = MailFeedbackService()
+        self.feedbackService = MailFeedbackService(recipients: ["support@toggl.com"], subject: "Superday feedback", body: "")
         
         let persistencyService = CoreDataPersistencyService<TimeSlot>(loggingService: self.loggingService,
                                                                       modelAdapter: TimeSlotModelAdapter())

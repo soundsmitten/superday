@@ -4,42 +4,65 @@ import MessageUI
 
 class MailFeedbackService: NSObject, FeedbackService, MFMailComposeViewControllerDelegate
 {
-    override init()
+    //MARK: Fields
+    private let recipients: [String]
+    private let subject: String
+    private let body: String
+    
+    //MARK: Properties
+    var logURL: URL?
     {
+        let fileManager = FileManager.default
+        var logURL: URL?
+        if let cacheDir = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first
+        {
+            logURL = cacheDir.appendingPathComponent("swiftybeaver.log")
+        }
+        return logURL
+    }
+    
+    init(recipients: [String],
+                  subject: String,
+                  body: String)
+    {
+        self.recipients = recipients
+        self.subject = subject
+        self.body = body
         super.init()
     }
     
-    func composeEmail(recipients: [String], subject: String, body: String, logURL: URL?, parentViewController viewController: UIViewController) {
-        
-        //Check if email is configured on the device
+    func composeFeedback(parentViewController: UIViewController)
+    {
+        //Check if email is set up in iOS Mail app
         guard MFMailComposeViewController.canSendMail() else
         {
             let alert = UIAlertController(title: "Oops! Seems like your email account is not set up.", message: "Go to “Settings > Mail > Add Account” to set up an email account or send us your feedback to support@toggl.com", preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: .default)
             alert.addAction(okAction)
-            viewController.present(alert, animated: true, completion: nil)
+            parentViewController.present(alert, animated: true, completion: nil)
             return
         }
         
+        //Set email fields
         let composeVC = MFMailComposeViewController()
         composeVC.mailComposeDelegate = self
-        composeVC.setToRecipients(recipients)
-        composeVC.setSubject(subject)
-        composeVC.setMessageBody(body, isHTML: false)
+        composeVC.setToRecipients(self.recipients)
+        composeVC.setSubject(self.subject)
+        composeVC.setMessageBody(self.body, isHTML: false)
         
-        //Try to attach log file, if it exists
-        if let logURL = logURL, let data = try? Data(contentsOf: logURL)
+        //Attach log file, if it exists
+        if let logURL = self.logURL, let data = try? Data(contentsOf: logURL)
         {
             composeVC.addAttachmentData(data, mimeType: "text/xml", fileName: "superday.log")
         }
         
-        viewController.present(composeVC, animated: true)
+        parentViewController.present(composeVC, animated: true)
     }
-    
+
     // MARK: - MFMailComposeViewControllerDelegate
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?)
     {
-        controller.dismiss(animated: true, completion: nil)
+        //Handle network errors
         if error != nil
         {
             let alertTitle = "Sorry. Can’t send email."
@@ -50,6 +73,7 @@ class MailFeedbackService: NSObject, FeedbackService, MFMailComposeViewControlle
             
             controller.present(alert, animated: true)
         }
+        
         controller.dismiss(animated: true)
     }
 }

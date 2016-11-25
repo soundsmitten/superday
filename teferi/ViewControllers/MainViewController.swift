@@ -191,16 +191,7 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
     
     @IBAction func onContactTouchUpInside()
     {
-        let fileManager = FileManager.default
-        var logURL: URL?
-        
-        // try to get a the log file url
-        if let cacheDir = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first
-        {
-            logURL = cacheDir.appendingPathComponent("swiftybeaver.log")
-        }
-        feedbackService.composeEmail(recipients: ["support@toggl.com"], subject: "Superday feedback", body: "", logURL: logURL, parentViewController: self)
-        
+        feedbackService.composeFeedback(parentViewController: self)
     }
     
     // MARK: Methods

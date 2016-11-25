@@ -2,5 +2,13 @@ import UIKit
 
 protocol FeedbackService
 {
-    func composeEmail(recipients: [String], subject: String, body: String, logURL: URL?, parentViewController viewController: UIViewController)
+    //Location of the log file
+    var logURL : URL? { get }
+    
+    /**
+     Begins the feedback process, showing a feedback UI
+     
+     - Parameter parentViewController: The viewcontroller that presents the feedback UI
+     */
+    func composeFeedback(parentViewController: UIViewController)
 }
