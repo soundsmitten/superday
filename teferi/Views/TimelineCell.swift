@@ -80,7 +80,9 @@ class TimelineCell : UITableViewCell
         
         let description = "\(categoryText) \(dateString)"
         let nonBoldRange = NSMakeRange(categoryText.characters.count, dateString.characters.count + 1)
-        let attributedText = description.getBoldStringWithNonBoldText(nonBoldRange)
+        let alphaRange = NSMakeRange(categoryText.characters.count, dateString.characters.count + 1)
+        let alpha: CGFloat = 0.5
+        let attributedText = description.getBoldStringWithNonBoldTextWithAlpha(nonBoldTextRange: nonBoldRange, alphaRange: alphaRange, alpha: alpha)
         
         slotDescription?.attributedText = attributedText
     }
