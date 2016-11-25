@@ -11,6 +11,7 @@ class PagerViewController : UIPageViewController, UIPageViewControllerDataSource
     private var settingsService : SettingsService!
     private var timeSlotService : TimeSlotService!
     private var editStateService : EditStateService!
+    private var feedbackService: FeedbackService!
     
     private var currentDateViewController : TimelineViewController!
     
@@ -40,13 +41,15 @@ class PagerViewController : UIPageViewController, UIPageViewControllerDataSource
                 _ appStateService: AppStateService,
                 _ settingsService: SettingsService,
                 _ timeSlotService: TimeSlotService,
-                _ editStateService: EditStateService)
+                _ editStateService: EditStateService,
+                _ feedbackService: FeedbackService)
     {
         self.metricsService = metricsService
         self.appStateService = appStateService
         self.settingsService = settingsService
         self.timeSlotService = timeSlotService
         self.editStateService = editStateService
+        self.feedbackService = feedbackService
         
         self.viewModel = PagerViewModel(settingsService: settingsService)
     }
@@ -74,7 +77,12 @@ class PagerViewController : UIPageViewController, UIPageViewControllerDataSource
             .subscribe(onNext: self.onAppStateChanged)
             .addDisposableTo(disposeBag!)
         
-        self.initCurrentDateViewController()
+        //Check if the feedback UI has closed
+        if self.feedbackService.hasStartedFeedback == false {
+            self.initCurrentDateViewController()
+        } else {
+            self.feedbackService.hasStartedFeedback = false
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool)

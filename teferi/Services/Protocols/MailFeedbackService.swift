@@ -9,6 +9,8 @@ class MailFeedbackService: NSObject, FeedbackService, MFMailComposeViewControlle
     private let subject: String
     private let body: String
     
+    private var feedbackStarted: Bool = false
+    
     //MARK: Properties
     var logURL: URL?
     {
@@ -21,18 +23,32 @@ class MailFeedbackService: NSObject, FeedbackService, MFMailComposeViewControlle
         return logURL
     }
     
-    init(recipients: [String],
-                  subject: String,
-                  body: String)
+    //Feedback functionality
+    var hasStartedFeedback: Bool
+    {
+        get
+        {
+            return feedbackStarted
+        }
+        set
+        {
+            feedbackStarted = newValue
+        }
+    }
+    
+    init(recipients: [String], subject: String, body: String)
     {
         self.recipients = recipients
         self.subject = subject
         self.body = body
+        
         super.init()
     }
     
     func composeFeedback(parentViewController: UIViewController)
     {
+        self.feedbackStarted = true
+        
         //Check if email is set up in iOS Mail app
         guard MFMailComposeViewController.canSendMail() else
         {

@@ -3,6 +3,15 @@ import UIKit
 
 class MockFeedbackService: FeedbackService
 {
+    var hasStartedFeedback: Bool
+    {
+        get
+        {
+            return false
+        }
+        set { }
+    }
+    
     var logURL: URL?
     {
         return nil

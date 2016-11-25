@@ -5,6 +5,8 @@ protocol FeedbackService
     //Location of the log file
     var logURL : URL? { get }
     
+    //Feedback UI has been shown
+    var hasStartedFeedback: Bool { get set }
     /**
      Begins the feedback process, showing a feedback UI
      

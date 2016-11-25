@@ -74,7 +74,8 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
                                         self.appStateService,
                                         self.settingsService,
                                         self.timeSlotService,
-                                        self.editStateService)
+                                        self.editStateService,
+                                        self.feedbackService)
         
         
         //Add fade overlay at bottom of timeline
@@ -191,7 +192,7 @@ class MainViewController : UIViewController, MFMailComposeViewControllerDelegate
     
     @IBAction func onContactTouchUpInside()
     {
-        feedbackService.composeFeedback(parentViewController: self)
+        self.feedbackService.composeFeedback(parentViewController: self)
     }
     
     // MARK: Methods
