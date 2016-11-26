@@ -56,7 +56,7 @@ class TimelineCell : UITableViewCell
         let categoryColor = timeSlot.category.color
         
         //Updates each one of the cell's components
-        self.layoutLine(withColor: categoryColor, hours: hours, minutes: minutes, isRunning: isRunning)
+        self.layoutLine(withColor: categoryColor, hours: hours, minutes: minutes, isRunning: isRunning, lastInPastDay: lastInPastDay)
         self.layoutElapsedTimeLabel(withColor: categoryColor, hours: hours, minutes: minutes)
         self.layoutDescriptionLabel(withTimeSlot: timeSlot, category: timeSlot.category, lastInPastDay: lastInPastDay)
         self.layoutCategoryIcon(withImageName: timeSlot.category.icon, color: categoryColor)
@@ -94,16 +94,44 @@ class TimelineCell : UITableViewCell
     }
     
     /// Updates the line that displays shows how long the TimeSlot lasted
-    private func layoutLine(withColor color: UIColor, hours: Int, minutes: Int, isRunning: Bool)
+    private func layoutLine(withColor color: UIColor, hours: Int, minutes: Int, isRunning: Bool, lastInPastDay: Bool)
     {
         let newHeight = CGFloat(Constants.minLineSize * (1 + (minutes / 15) + (hours * 4)))
         self.lineHeightConstraint.constant = newHeight
         
         self.lineView.backgroundColor = color
+        
+        //Fade the line if it is the last TimeSlot of a past day
+        if lastInPastDay
+        {
+            let bottomFadeStartColor = UIColor.white.withAlphaComponent(1.0) //1.0
+            let bottomFadeEndColor = UIColor.white.withAlphaComponent(0.0) //0.0
+            let bottomFadeOverlay = self.fadeOverlay(startColor: bottomFadeStartColor, endColor: bottomFadeEndColor, changeLocation: 0.0)
+            let fadeView = AutoResizingLayerView(layer: bottomFadeOverlay)
+            self.lineView.addSubview(fadeView)
+            fadeView.snp.makeConstraints { make in
+                make.bottom.equalTo(self.lineView.snp.bottom)
+                make.left.equalTo(self.lineView.snp.left)
+                make.right.equalTo(self.lineView.snp.right)
+                make.height.equalTo(100)
+            }
+        }
+        
         self.lineView.layoutIfNeeded()
         
         self.indicatorDot.backgroundColor = color
         self.indicatorDot.isHidden = !isRunning
         self.indicatorDot.layoutIfNeeded()
+    }
+    
+    /// Configure the fade overlay
+    private func fadeOverlay(startColor: UIColor, endColor: UIColor, changeLocation: Double) -> CAGradientLayer
+    {
+        let fadeOverlay = CAGradientLayer()
+        fadeOverlay.colors = [startColor.cgColor, endColor.cgColor]
+        fadeOverlay.locations = [NSNumber(value: changeLocation)]
+        fadeOverlay.startPoint = CGPoint(x: 0.0, y: 1.0)
+        fadeOverlay.endPoint = CGPoint(x: 0.0, y: 0.0)
+        return fadeOverlay
     }
 }

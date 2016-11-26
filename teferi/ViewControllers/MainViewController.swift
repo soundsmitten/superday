@@ -77,7 +77,7 @@ class MainViewController : UIViewController
         //Add fade overlay at bottom of timeline
         let bottomFadeStartColor = UIColor.white.withAlphaComponent(1.0)
         let bottomFadeEndColor = UIColor.white.withAlphaComponent(0.0)
-        let bottomFadeOverlay = self.fadeOverlay(startColor: bottomFadeStartColor, endColor: bottomFadeEndColor)
+        let bottomFadeOverlay = self.fadeOverlay(startColor: bottomFadeStartColor, endColor: bottomFadeEndColor, changeLocation: 0.1)
         let fadeView = AutoResizingLayerView(layer: bottomFadeOverlay)
         self.view.addSubview(fadeView)
         fadeView.snp.makeConstraints { make in
@@ -264,11 +264,11 @@ class MainViewController : UIViewController
     }
 
     //Configure overlay
-    private func fadeOverlay(startColor: UIColor, endColor: UIColor) -> CAGradientLayer
+    private func fadeOverlay(startColor: UIColor, endColor: UIColor, changeLocation: Double) -> CAGradientLayer
     {
         let fadeOverlay = CAGradientLayer()
         fadeOverlay.colors = [startColor.cgColor, endColor.cgColor]
-        fadeOverlay.locations = [0.1]
+        fadeOverlay.locations = [NSNumber(value: changeLocation)]
         fadeOverlay.startPoint = CGPoint(x: 0.0, y: 1.0)
         fadeOverlay.endPoint = CGPoint(x: 0.0, y: 0.0)
         return fadeOverlay
