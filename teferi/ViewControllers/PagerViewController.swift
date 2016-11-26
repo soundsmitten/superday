@@ -11,7 +11,6 @@ class PagerViewController : UIPageViewController, UIPageViewControllerDataSource
     private var settingsService : SettingsService!
     private var timeSlotService : TimeSlotService!
     private var editStateService : EditStateService!
-    private var feedbackService: FeedbackService!
     
     private var currentDateViewController : TimelineViewController!
     
@@ -19,6 +18,7 @@ class PagerViewController : UIPageViewController, UIPageViewControllerDataSource
     
     // MARK: Properties
     var dateObservable : Observable<Date> { return viewModel.dateObservable }
+    var feedbackUIClosing : Bool = false
     
     // MARK: Initializers
     override init(transitionStyle style: UIPageViewControllerTransitionStyle, navigationOrientation: UIPageViewControllerNavigationOrientation, options: [String : Any]?)
@@ -41,15 +41,13 @@ class PagerViewController : UIPageViewController, UIPageViewControllerDataSource
                 _ appStateService: AppStateService,
                 _ settingsService: SettingsService,
                 _ timeSlotService: TimeSlotService,
-                _ editStateService: EditStateService,
-                _ feedbackService: FeedbackService)
+                _ editStateService: EditStateService)
     {
         self.metricsService = metricsService
         self.appStateService = appStateService
         self.settingsService = settingsService
         self.timeSlotService = timeSlotService
         self.editStateService = editStateService
-        self.feedbackService = feedbackService
         
         self.viewModel = PagerViewModel(settingsService: settingsService)
     }
@@ -78,11 +76,13 @@ class PagerViewController : UIPageViewController, UIPageViewControllerDataSource
             .addDisposableTo(disposeBag!)
         
         //Check if the feedback UI has closed
-        if self.feedbackService.hasStartedFeedback == false {
-            self.initCurrentDateViewController()
-        } else {
-            self.feedbackService.hasStartedFeedback = false
+        guard !self.feedbackUIClosing else
+        {
+            self.feedbackUIClosing = false
+            return
         }
+        
+        self.initCurrentDateViewController()
     }
     
     override func viewWillDisappear(_ animated: Bool)

@@ -5,14 +5,13 @@ import MessageUI
 class MailFeedbackService: NSObject, FeedbackService, MFMailComposeViewControllerDelegate
 {
     //MARK: Fields
-    private let recipients: [String]
-    private let subject: String
-    private let body: String
-    
-    private var feedbackStarted: Bool = false
+    private let recipients : [String]
+    private let subject : String
+    private let body : String
+    private var completionHandler: () -> ()
     
     //MARK: Properties
-    var logURL: URL?
+    var logURL : URL?
     {
         let fileManager = FileManager.default
         var logURL: URL?
@@ -23,31 +22,20 @@ class MailFeedbackService: NSObject, FeedbackService, MFMailComposeViewControlle
         return logURL
     }
     
-    //Feedback functionality
-    var hasStartedFeedback: Bool
-    {
-        get
-        {
-            return feedbackStarted
-        }
-        set
-        {
-            feedbackStarted = newValue
-        }
-    }
-    
     init(recipients: [String], subject: String, body: String)
     {
         self.recipients = recipients
         self.subject = subject
         self.body = body
+        self.completionHandler = { }
         
         super.init()
     }
     
-    func composeFeedback(parentViewController: UIViewController)
+    func composeFeedback(parentViewController: UIViewController, completed: @escaping () -> ())
     {
-        self.feedbackStarted = true
+        //Assign the completion handler when the UI is dismissed
+        self.completionHandler = completed
         
         //Check if email is set up in iOS Mail app
         guard MFMailComposeViewController.canSendMail() else
@@ -90,6 +78,7 @@ class MailFeedbackService: NSObject, FeedbackService, MFMailComposeViewControlle
             controller.present(alert, animated: true)
         }
         
+        self.completionHandler()
         controller.dismiss(animated: true)
     }
 }

@@ -3,21 +3,12 @@ import UIKit
 
 class MockFeedbackService: FeedbackService
 {
-    var hasStartedFeedback: Bool
-    {
-        get
-        {
-            return false
-        }
-        set { }
-    }
-    
     var logURL: URL?
     {
         return nil
     }
     
-    func composeFeedback(parentViewController: UIViewController)
+    func composeFeedback(parentViewController: UIViewController, completed: @escaping () -> ())
     {
         
     }

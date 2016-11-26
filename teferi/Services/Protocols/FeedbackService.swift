@@ -6,11 +6,12 @@ protocol FeedbackService
     var logURL : URL? { get }
     
     //Feedback UI has been shown
-    var hasStartedFeedback: Bool { get set }
     /**
      Begins the feedback process, showing a feedback UI
      
      - Parameter parentViewController: The viewcontroller that presents the feedback UI
+     
+     - Parameter completed: Called when feedback UI is dismissed
      */
-    func composeFeedback(parentViewController: UIViewController)
+    func composeFeedback(parentViewController: UIViewController, completed: @escaping () -> ())
 }
